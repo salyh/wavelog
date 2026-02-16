@@ -1,0 +1,64 @@
+name: wavelogplus
+
+services:
+  wavelog-db:
+    image: mariadb:11.3
+    container_name: wavelogplus-db
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: yes
+      MARIADB_DATABASE: wavelogplus
+      MARIADB_USER: wavelogplus
+      MARIADB_PASSWORD: wavelogplus
+    volumes:
+      - wp-dbdata:/var/lib/mysql
+    restart: always
+    user: mysql
+
+  wavelog-plus:
+    container_name: wavelog-plus
+    image: hsaly/wavelogplus:latest
+    depends_on:
+      - wavelog-db
+    environment:
+      CI_ENV: docker
+    volumes:
+      - wp-config:/var/www/html/application/config/docker
+      - wp-uploads:/var/www/html/uploads
+      - wp-userdata:/var/www/html/userdata
+    ports:
+      - "8086:80"
+    restart: always
+
+#  This container is when you want to run it in a self hosted vm
+#  See https://docs.linuxserver.io/general/swag/
+#  in ./swag/nginx/site-confs/ you also need to have a nginx configuration file named "default"
+#  Refer to the example in default.example
+
+#  swag:
+#    image: lscr.io/linuxserver/swag
+#    container_name: swag
+#    cap_add:
+#      - NET_ADMIN
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=Europe/Berlin
+#      - URL=example.com
+#      - SUBDOMAINS=logbook
+#      - VALIDATION=http
+#      - EMAIL=example@test.com
+#      - ONLY_SUBDOMAINS=true
+#      - STAGING=false
+#      - SWAG_AUTORELOAD=true
+#    volumes:
+#      - ./swag:/config
+#    ports:
+#      - 443:443
+#      - 80:80 #optional
+#    restart: always
+
+volumes:
+  wp-dbdata:
+  wp-uploads:
+  wp-userdata:
+  wp-config:
