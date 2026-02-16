@@ -8,14 +8,14 @@ on:
 
 jobs:
   run_scripts:
-    if: github.repository == 'wavelog/wavelog'
+    if: github.repository == 'salyh/wavelog'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          repository: wavelog/wavelog
+          repository: salyh/wavelog
           ref: dev
 
       - name: Set up gettext
@@ -40,8 +40,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Invoke Weblate Update
-        uses: distributhor/workflow-webhook@v3
-        with:
-          webhook_type: 'json-extended'
-          webhook_url: ${{ secrets.WEBLATE_HOOKURL }}
+      #- name: Invoke Weblate Update
+      #  uses: distributhor/workflow-webhook@v3
+      #  with:
+      #    webhook_type: 'json-extended'
+      #    webhook_url: ${{ secrets.WEBLATE_HOOKURL }}
